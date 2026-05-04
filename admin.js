@@ -285,7 +285,10 @@ function showGalleryToast(message) {
 }
 
 // ===== INITIAL LOAD =====
-loadRequests();
+document.addEventListener('DOMContentLoaded', () => {
+  loadRequests();
+  loadGallery();
+});
 
 
 // ===== LOGIN =====
@@ -337,10 +340,15 @@ function updateStats() {
   const inProgress = allRequests.filter(r => r.status === 'in_progress').length;
   const archived = allRequests.filter(r => r.status === 'completed' || r.status === 'declined').length;
 
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statNew').textContent = processing;
-  document.getElementById('statInProgress').textContent = inProgress;
-  document.getElementById('statArchived').textContent = archived;
+  const elTotal = document.getElementById('statTotal');
+  const elNew = document.getElementById('statNew');
+  const elInProgress = document.getElementById('statInProgress');
+  const elArchived = document.getElementById('statArchived');
+
+  if (elTotal) elTotal.textContent = total;
+  if (elNew) elNew.textContent = processing;
+  if (elInProgress) elInProgress.textContent = inProgress;
+  if (elArchived) elArchived.textContent = archived;
   
   const badge = document.getElementById('newBadge');
   if (badge) {
