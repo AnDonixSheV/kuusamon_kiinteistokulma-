@@ -75,33 +75,33 @@ function renderProjectsAdmin() {
       <div class="project-admin-header">
         <div class="project-admin-title-row">
           <span class="gallery-index">#${i + 1}</span>
-          <input type="text" class="gallery-edit-title" value="${project.name.replace(/"/g, '&quot;')}" onchange="updateProjectName(${i}, this.value)" placeholder="Название проекта...">
+          <input type="text" class="gallery-edit-title" value="${project.name.replace(/"/g, '&quot;')}" onchange="updateProjectName(${i}, this.value)" placeholder="Projektin nimi...">
         </div>
         <div class="project-admin-actions">
-          <button class="gallery-move-btn" onclick="toggleProjectVisibility(${i})" title="${isPublished ? 'Скрыть с сайта' : 'Опубликовать на сайте'}" style="background: ${isPublished ? 'rgba(239,68,68,0.15)' : 'rgba(74,222,128,0.15)'}; color: ${isPublished ? '#ef4444' : '#4ade80'}; border: 1px solid currentColor;">
-            ${isPublished ? '👁️ Скрыть' : '👁️‍🗨️ Опубликовать'}
+          <button class="gallery-move-btn" onclick="toggleProjectVisibility(${i})" title="${isPublished ? 'Piilota sivustolta' : 'Julkaise sivustolla'}" style="background: ${isPublished ? 'rgba(239,68,68,0.15)' : 'rgba(74,222,128,0.15)'}; color: ${isPublished ? '#ef4444' : '#4ade80'}; border: 1px solid currentColor;">
+            ${isPublished ? '👁️ Piilota' : '👁️‍🗨️ Julkaise'}
           </button>
-          ${i > 0 ? `<button class="gallery-move-btn" onclick="moveProject(${i}, -1)" title="Переместить вверх">⬆</button>` : ''}
-          ${i < galleryPhotos.length - 1 ? `<button class="gallery-move-btn" onclick="moveProject(${i}, 1)" title="Переместить вниз">⬇</button>` : ''}
-          <button class="gallery-delete-btn" onclick="deleteProject(${i})" title="Удалить">🗑️ Удалить</button>
+          ${i > 0 ? `<button class="gallery-move-btn" onclick="moveProject(${i}, -1)" title="Siirrä ylös">⬆</button>` : ''}
+          ${i < galleryPhotos.length - 1 ? `<button class="gallery-move-btn" onclick="moveProject(${i}, 1)" title="Siirrä alas">⬇</button>` : ''}
+          <button class="gallery-delete-btn" onclick="deleteProject(${i})" title="Poista">🗑️ Poista</button>
         </div>
       </div>
       <div class="project-admin-photos">
         ${project.photos.map((photo, pi) => `
           <div class="project-admin-photo">
-            <img src="${photo.src}" alt="${(photo.alt || '').replace(/"/g, '&quot;')}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 75%22><rect fill=%22%23252836%22 width=%22100%22 height=%2275%22/><text x=%2250%22 y=%2240%22 text-anchor=%22middle%22 fill=%22%235f6478%22 font-size=%2210%22>Ошибка</text></svg>'">
-            <button class="photo-remove-btn" onclick="removePhotoFromProject(${i}, ${pi})" title="Удалить фото">✕</button>
+            <img src="${photo.src}" alt="${(photo.alt || '').replace(/"/g, '&quot;')}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 75%22><rect fill=%22%23252836%22 width=%22100%22 height=%2275%22/><text x=%2250%22 y=%2240%22 text-anchor=%22middle%22 fill=%22%235f6478%22 font-size=%2210%22>Virhe</text></svg>'">
+            <button class="photo-remove-btn" onclick="removePhotoFromProject(${i}, ${pi})" title="Poista kuva">✕</button>
           </div>
         `).join('')}
         ${project.photos.length < 5 ? `
           <div class="project-add-photo-btn" onclick="triggerAddPhotoToProject(${i})">
-            <span>+ Добавить фото</span>
+            <span>+ Lisää kuva</span>
             <input type="file" id="addPhotoInput_${i}" accept="image/*" style="display:none;" onchange="handleAddPhotoToProject(${i}, this)">
           </div>
         ` : ''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // ===== PROJECT CRUD =====
@@ -294,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== LOGIN =====
 function doLogin() {
   const pwdInput = document.getElementById('loginPassword');
+  if (!pwdInput) return;
   const pwd = pwdInput.value.trim();
   if (pwd === ADMIN_PASSWORD) {
     document.getElementById('loginScreen').style.display = 'none';
@@ -311,10 +312,24 @@ function doLogin() {
   }
 }
 
+// Make sure login works reliably
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.querySelector('.login-btn');
+  const pwdInput = document.getElementById('loginPassword');
+  if (loginBtn) {
+    loginBtn.onclick = (e) => { e.preventDefault(); doLogin(); };
+  }
+  if (pwdInput) {
+    pwdInput.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); doLogin(); } };
+  }
+});
+
 // Auto-login if session active
 if (sessionStorage.getItem('kk_admin') === 'true') {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').classList.add('active');
+  const ls = document.getElementById('loginScreen');
+  const db = document.getElementById('dashboard');
+  if (ls) ls.style.display = 'none';
+  if (db) db.classList.add('active');
   loadRequests();
   loadGallery();
 }
@@ -411,8 +426,8 @@ function renderRequests(requests) {
     container.innerHTML = `
       <div class="no-data">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <h3>Заявок не найдено</h3>
-        <p>Здесь будут отображаться заявки с формы на сайте.</p>
+        <h3>Ei tarjouspyyntöjä</h3>
+        <p>Sivustolta lähetetyt tarjouspyynnöt näkyvät tässä.</p>
       </div>
     `;
     return;
@@ -423,17 +438,17 @@ function renderRequests(requests) {
 
   container.innerHTML = requests.map(r => {
     const date = new Date(r.createdAt);
-    const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = date.toLocaleDateString('fi-FI') + ' ' + date.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
 
     return `
       <div class="request-card" onclick="openRequest('${r.id}')">
         <span class="status-badge ${statusColors[r.status] || ''}">${statusLabels[r.status] || r.status}</span>
         <div class="request-info">
-          <h3>${r.client?.name || 'Без имени'} — ${r.serviceName || 'Без услуги'}</h3>
-          <p>${r.description ? r.description.substring(0, 80) + (r.description.length > 80 ? '...' : '') : 'Нет описания'}</p>
+          <h3>${r.client?.name || 'Ei nimeä'} — ${r.serviceName || 'Ei palvelua'}</h3>
+          <p>${r.description ? r.description.substring(0, 80) + (r.description.length > 80 ? '...' : '') : 'Ei kuvausta'}</p>
         </div>
         <div class="request-meta">
-          <div class="price">${r.client?.phone || 'Нет телефона'}</div>
+          <div class="price">${r.client?.phone || 'Ei puhelinta'}</div>
           <div>${dateStr}</div>
         </div>
         <div style="font-size:12px;color:var(--text-muted)">${r.id}</div>
@@ -447,46 +462,46 @@ function openRequest(id) {
   const r = allRequests.find(req => req.id === id);
   if (!r) return;
 
-  document.getElementById('modalTitle').textContent = `Заявка ${r.id}`;
+  document.getElementById('modalTitle').textContent = `Tarjouspyyntö ${r.id}`;
 
   const statusOptions = ['processing', 'in_progress', 'completed', 'declined'];
   const statusLabels = { processing: 'Käsittelyssä', in_progress: 'Käynnissä', completed: 'Valmis', declined: 'Hylätty' };
 
   const date = new Date(r.createdAt);
-  const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  const dateStr = date.toLocaleDateString('fi-FI') + ' ' + date.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
 
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-section">
-      <div style="margin-bottom: 16px; font-size: 13px; color: var(--text-muted);">Получено: ${dateStr}</div>
-      <h3>👤 Данные клиента</h3>
+      <div style="margin-bottom: 16px; font-size: 13px; color: var(--text-muted);">Vastaanotettu: ${dateStr}</div>
+      <h3>👤 Asiakkaan tiedot</h3>
       <div class="modal-grid">
-        <div class="modal-field"><div class="label">Имя</div><div class="value">${r.client?.name || '—'}</div></div>
-        <div class="modal-field"><div class="label">Телефон</div><div class="value"><a href="tel:${r.client?.phone}" style="color:var(--accent-light)">${r.client?.phone || '—'}</a></div></div>
-        <div class="modal-field"><div class="label">Email</div><div class="value">${r.client?.email || '—'}</div></div>
-        <div class="modal-field"><div class="label">Услуга</div><div class="value">${r.serviceName || '—'}</div></div>
+        <div class="modal-field"><div class="label">Nimi</div><div class="value">${r.client?.name || '—'}</div></div>
+        <div class="modal-field"><div class="label">Puhelin</div><div class="value"><a href="tel:${r.client?.phone}" style="color:var(--accent-light)">${r.client?.phone || '—'}</a></div></div>
+        <div class="modal-field"><div class="label">Sähköposti</div><div class="value">${r.client?.email || '—'}</div></div>
+        <div class="modal-field"><div class="label">Palvelu</div><div class="value">${r.serviceName || '—'}</div></div>
       </div>
     </div>
 
     <div class="modal-section">
-      <h3>📝 Сообщение</h3>
-      <div class="modal-field"><div class="value">${r.description || 'Нет описания'}</div></div>
+      <h3>📝 Viesti</h3>
+      <div class="modal-field"><div class="value">${r.description || 'Ei kuvausta'}</div></div>
     </div>
 
     <div class="modal-section">
-      <h3>⚙️ Управление</h3>
+      <h3>⚙️ Hallinta</h3>
       <div class="modal-grid">
         <div class="field-group" style="display:flex;flex-direction:column;gap:6px;">
-          <label class="label" style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Статус заявки</label>
+          <label class="label" style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Tilauksen tila</label>
           <select id="modalStatus" class="status-select">
             ${statusOptions.map(opt => `<option value="${opt}" ${r.status === opt ? 'selected' : ''}>${statusLabels[opt]}</option>`).join('')}
           </select>
         </div>
       </div>
       <div class="field-group" style="margin-top:16px;">
-        <label class="label" style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;display:block;">Заметки администратора</label>
-        <textarea id="modalNotes" class="admin-notes" placeholder="Внутренние заметки...">${r.adminNotes || ''}</textarea>
+        <label class="label" style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;display:block;">Sisäiset muistiinpanot</label>
+        <textarea id="modalNotes" class="admin-notes" placeholder="Sisäiset muistiinpanot...">${r.adminNotes || ''}</textarea>
       </div>
-      <button class="modal-save" onclick="saveRequestChanges('${r.id}')">💾 Сохранить изменения</button>
+      <button class="modal-save" onclick="saveRequestChanges('${r.id}')">💾 Tallenna muutokset</button>
     </div>
   `;
 
@@ -511,7 +526,7 @@ function saveRequestChanges(id) {
   updateStats();
   filterRequests();
   closeModal();
-  showGalleryToast('✅ Изменения сохранены');
+  showGalleryToast('✅ Muutokset tallennettu');
 }
 
 // ===== SIDEBAR NAV (with views) =====
