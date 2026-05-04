@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="fi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель управления | Kuusamon Kiinteistökulma Oy</title>
+<title>Hallintapaneeli | Kuusamon Kiinteistökulma Oy</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="admin-style.css">
 </head>
@@ -13,11 +13,11 @@
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
     <img src="images/logo.png" alt="Logo">
-    <h1>Панель управления</h1>
-    <p>Войдите, чтобы управлять заявками</p>
-    <input type="password" class="login-field" id="loginPassword" placeholder="Пароль" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">Войти</button>
-    <div class="login-error" id="loginError">Неверный пароль. Попробуйте еще раз.</div>
+    <h1>Hallintapaneeli</h1>
+    <p>Kirjaudu sisään hallinnoidaksesi tarjouspyyntöjä</p>
+    <input type="password" class="login-field" id="loginPassword" placeholder="Salasana" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Kirjaudu</button>
+    <div class="login-error" id="loginError">Väärä salasana. Yritä uudelleen.</div>
   </div>
 </div>
 
@@ -33,22 +33,22 @@
     <nav class="sidebar-nav">
       <a href="#" class="active" data-view="requests">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Заявки
+        Tarjouspyynnöt
         <span class="badge" id="newBadge">0</span>
       </a>
       <a href="#" data-view="gallery">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        Галерея работ
+        Referenssigalleria
       </a>
       <a href="#" data-view="stats">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Статистика
+        Tilastot
       </a>
     </nav>
     <div class="sidebar-footer">
       <a href="index.html">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Вернуться на сайт
+        Palaa sivustolle
       </a>
     </div>
   </aside>
@@ -60,12 +60,12 @@
         <button class="mobile-menu-btn" onclick="toggleSidebar()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
-        <h1 id="pageTitle">Заявки с сайта</h1>
+        <h1 id="pageTitle">Tarjouspyynnöt</h1>
       </div>
       <div class="header-actions">
         <button class="filter-btn" onclick="loadRequests()" style="display:flex;align-items:center;gap:6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          Обновить
+          Päivitä
         </button>
       </div>
     </div>
@@ -74,24 +74,24 @@
     <div class="view-content" id="viewRequests">
       <!-- STATS -->
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><div class="stat-label">Все заявки</div><div class="stat-value" id="statTotal">0</div></div>
-        <div class="stat-card"><div class="stat-label">В обработке</div><div class="stat-value" id="statNew" style="color:#3b82f6">0</div></div>
-        <div class="stat-card"><div class="stat-label">Выполняется</div><div class="stat-value" id="statInProgress" style="color:#f59e0b">0</div></div>
-        <div class="stat-card"><div class="stat-label">Архив</div><div class="stat-value" id="statArchived" style="color:#5f6478">0</div></div>
+        <div class="stat-card"><div class="stat-label">Kaikki pyynnöt</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Käsittelyssä</div><div class="stat-value" id="statNew" style="color:#3b82f6">0</div></div>
+        <div class="stat-card"><div class="stat-label">Käynnissä</div><div class="stat-value" id="statInProgress" style="color:#f59e0b">0</div></div>
+        <div class="stat-card"><div class="stat-label">Arkisto</div><div class="stat-value" id="statArchived" style="color:#5f6478">0</div></div>
       </div>
 
       <!-- FILTERS -->
       <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по имени, телефону, email..." oninput="filterRequests()">
-        <button class="filter-btn active" data-filter="active" onclick="setFilter('active')">Все активные</button>
-        <button class="filter-btn" data-filter="processing" onclick="setFilter('processing')">В обработке</button>
-        <button class="filter-btn" data-filter="in_progress" onclick="setFilter('in_progress')">Выполняется</button>
-        <button class="filter-btn" data-filter="archive" onclick="setFilter('archive')">Архив</button>
+        <input type="text" id="searchInput" placeholder="🔍 Hae nimellä, puhelimella, sähköpostilla..." oninput="filterRequests()">
+        <button class="filter-btn active" data-filter="active" onclick="setFilter('active')">Kaikki aktiiviset</button>
+        <button class="filter-btn" data-filter="processing" onclick="setFilter('processing')">Käsittelyssä</button>
+        <button class="filter-btn" data-filter="in_progress" onclick="setFilter('in_progress')">Käynnissä</button>
+        <button class="filter-btn" data-filter="archive" onclick="setFilter('archive')">Arkisto</button>
         
         <select id="sortSelect" onchange="filterRequests()" class="filter-btn" style="margin-left: auto;">
-          <option value="newest">Сначала новые</option>
-          <option value="oldest">Сначала старые</option>
-          <option value="status">По статусу</option>
+          <option value="newest">Uusimmat ensin</option>
+          <option value="oldest">Vanhimmat ensin</option>
+          <option value="status">Statuksen mukaan</option>
         </select>
       </div>
 
@@ -103,53 +103,53 @@
     <div class="view-content" id="viewGallery" style="display:none;">
       <div class="gallery-admin">
         <div class="gallery-admin-header">
-          <h2>📸 Управление проектами</h2>
-          <p>Добавляйте, редактируйте и упорядочивайте разделы проектов. Каждый раздел может содержать от 1 до 5 фотографий.</p>
+          <h2>📸 Projektien hallinta</h2>
+          <p>Lisää, muokkaa ja järjestele projektiosioita. Jokainen osio voi sisältää 1–5 kuvaa.</p>
         </div>
 
         <!-- ADD PROJECT SECTION FORM -->
         <div class="gallery-add-card">
-          <h3>Добавить новый проект</h3>
+          <h3>Lisää uusi projekti</h3>
           <div class="gallery-add-form">
             <div class="gallery-title-input">
-              <label>Название проекта *</label>
-              <input type="text" id="projectNameInput" placeholder="напр. Ремонт крыши в Куусамо">
+              <label>Projektin nimi *</label>
+              <input type="text" id="projectNameInput" placeholder="esim. Kattoremontti Kuusamossa">
             </div>
             <div class="gallery-upload-zone" id="uploadZone">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <p>Перетащите изображения сюда или <span>выберите файлы</span> (1–5 фото)</p>
+              <p>Vedä kuvat tähän tai <span>valitse tiedostot</span> (1–5 kuvaa)</p>
               <input type="file" id="galleryFileInput" accept="image/*" multiple style="display:none;">
             </div>
             <div class="gallery-url-input">
-              <label>или добавьте URL изображения:</label>
+              <label>tai lisää kuvan URL-osoite:</label>
               <div style="display:flex;gap:8px;">
                 <input type="text" id="galleryUrlInput" placeholder="https://example.com/image.jpg" style="flex:1;">
-                <button class="gallery-url-add-btn" onclick="addUrlToPreview()">+ Добавить</button>
+                <button class="gallery-url-add-btn" onclick="addUrlToPreview()">+ Lisää</button>
               </div>
             </div>
             <div id="projectPhotosPreview" class="project-photos-preview" style="display:none;">
-              <h4>Выбранные фото (<span id="previewCount">0</span>/5)</h4>
+              <h4>Valitut kuvat (<span id="previewCount">0</span>/5)</h4>
               <div class="preview-grid" id="previewGrid"></div>
             </div>
-            <button class="gallery-add-btn" onclick="addProjectSection()">➕ Добавить проект</button>
+            <button class="gallery-add-btn" onclick="addProjectSection()">➕ Lisää projekti</button>
           </div>
         </div>
 
         <!-- EXISTING PROJECT SECTIONS -->
         <div class="gallery-existing">
-          <h3>Текущие проекты (<span id="projectCount">0</span>)</h3>
+          <h3>Nykyiset projektit (<span id="projectCount">0</span>)</h3>
           <div id="projectsAdminList">
             <!-- Filled by JS -->
           </div>
           <div class="gallery-empty" id="galleryEmpty" style="display:none;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <p>Нет проектов. Добавьте первый проект, используя форму выше.</p>
+            <p>Ei projekteja. Lisää ensimmäinen projekti yllä olevalla lomakkeella.</p>
           </div>
         </div>
 
         <!-- ACTIONS -->
         <div class="gallery-actions">
-          <button class="gallery-reset-btn" onclick="resetProjectsToDefaults()">🔄 Сбросить до настроек по умолчанию</button>
+          <button class="gallery-reset-btn" onclick="resetProjectsToDefaults()">🔄 Palauta oletusasetukset</button>
         </div>
       </div>
     </div>
@@ -157,10 +157,10 @@
     <!-- STATS VIEW -->
     <div class="view-content" id="viewStats" style="display:none;">
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label">Все запросы</div><div class="stat-value" id="statTotal2">0</div></div>
-        <div class="stat-card"><div class="stat-label">Новые</div><div class="stat-value" id="statNew2" style="color:#3b82f6">0</div></div>
-        <div class="stat-card"><div class="stat-label">Принятые</div><div class="stat-value" id="statAccepted2" style="color:#4ade80">0</div></div>
-        <div class="stat-card"><div class="stat-label">Оценочная стоимость</div><div class="stat-value" id="statValue2" style="color:#f59e0b">0 €</div></div>
+        <div class="stat-card"><div class="stat-label">Kaikki kyselyt</div><div class="stat-value" id="statTotal2">0</div></div>
+        <div class="stat-card"><div class="stat-label">Uudet</div><div class="stat-value" id="statNew2" style="color:#3b82f6">0</div></div>
+        <div class="stat-card"><div class="stat-label">Hyväksytyt</div><div class="stat-value" id="statAccepted2" style="color:#4ade80">0</div></div>
+        <div class="stat-card"><div class="stat-label">Arvioitu arvo</div><div class="stat-value" id="statValue2" style="color:#f59e0b">0 €</div></div>
       </div>
     </div>
   </div>
@@ -170,7 +170,7 @@
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-card">
     <div class="modal-header">
-      <h2 id="modalTitle">Заявка</h2>
+      <h2 id="modalTitle">Tarjouspyyntö</h2>
       <button class="modal-close" onclick="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>

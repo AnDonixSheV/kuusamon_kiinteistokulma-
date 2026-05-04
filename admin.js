@@ -121,11 +121,11 @@ function moveProject(index, direction) {
 }
 
 function deleteProject(index) {
-  if (!confirm('Вы уверены, что хотите удалить этот проект?')) return;
+  if (!confirm('Haluatko varmasti poistaa tämän projektin?')) return;
   galleryPhotos.splice(index, 1);
   saveProjects();
   renderProjectsAdmin();
-  showGalleryToast('🗑️ Проект удален.');
+  showGalleryToast('🗑️ Projekti poistettu.');
 }
 
 function toggleProjectVisibility(index) {
@@ -140,7 +140,7 @@ function toggleProjectVisibility(index) {
 function removePhotoFromProject(projectIndex, photoIndex) {
   const project = galleryPhotos[projectIndex];
   if (project.photos.length <= 1) {
-    if (confirm('Это последняя фотография. Удалить весь проект?')) {
+    if (confirm('Tämä on viimeinen kuva. Poistaa koko projektin?')) {
       deleteProject(projectIndex);
     }
     return;
@@ -148,7 +148,7 @@ function removePhotoFromProject(projectIndex, photoIndex) {
   project.photos.splice(photoIndex, 1);
   saveProjects();
   renderProjectsAdmin();
-  showGalleryToast('🗑️ Фотография удалена.');
+  showGalleryToast('🗑️ Kuva poistettu.');
 }
 
 function triggerAddPhotoToProject(projectIndex) {
@@ -158,15 +158,15 @@ function triggerAddPhotoToProject(projectIndex) {
 function handleAddPhotoToProject(projectIndex, input) {
   const file = input.files[0];
   if (!file) return;
-  if (!file.type.startsWith('image/')) { alert('Пожалуйста, выберите файл изображения.'); return; }
-  if (file.size > 5 * 1024 * 1024) { alert('Максимальный размер изображения — 5 МБ.'); return; }
+  if (!file.type.startsWith('image/')) { alert('Valitse kuvatiedosto.'); return; }
+  if (file.size > 5 * 1024 * 1024) { alert('Kuvan maksimikoko on 5 MB.'); return; }
 
   const reader = new FileReader();
   reader.onload = (e) => {
     galleryPhotos[projectIndex].photos.push({ src: e.target.result, alt: galleryPhotos[projectIndex].name });
     saveProjects();
     renderProjectsAdmin();
-    showGalleryToast('✅ Фотография добавлена!');
+    showGalleryToast('✅ Kuva lisätty!');
   };
   reader.readAsDataURL(file);
 }
@@ -175,8 +175,8 @@ function handleAddPhotoToProject(projectIndex, input) {
 function addProjectSection() {
   const nameInput = document.getElementById('projectNameInput');
   const name = nameInput.value.trim();
-  if (!name) { alert('Пожалуйста, введите название проекта.'); return; }
-  if (pendingPhotos.length === 0) { alert('Добавьте хотя бы одну фотографию.'); return; }
+  if (!name) { alert('Anna projektin nimi.'); return; }
+  if (pendingPhotos.length === 0) { alert('Lisää vähintään yksi kuva.'); return; }
 
   galleryPhotos.push({
     name: name,
@@ -185,7 +185,7 @@ function addProjectSection() {
 
   saveProjects();
   renderProjectsAdmin();
-  showGalleryToast('✅ Проект добавлен!');
+  showGalleryToast('✅ Projekti lisätty!');
 
   // Clear form
   nameInput.value = '';
@@ -219,7 +219,7 @@ function addUrlToPreview() {
   const input = document.getElementById('galleryUrlInput');
   const url = input.value.trim();
   if (!url) return;
-  if (pendingPhotos.length >= 5) { alert('Максимум 5 фотографий на один проект.'); return; }
+  if (pendingPhotos.length >= 5) { alert('Enintään 5 kuvaa per projekti.'); return; }
   pendingPhotos.push({ src: url });
   input.value = '';
   updatePreviewGrid();
@@ -227,11 +227,11 @@ function addUrlToPreview() {
 
 // ===== RESET =====
 function resetProjectsToDefaults() {
-  if (!confirm('Восстановить проекты по умолчанию? Все добавленные вами проекты будут удалены.')) return;
+  if (!confirm('Palauttaa oletusprojektit? Kaikki lisätyt projektit poistetaan.')) return;
   galleryPhotos = JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
   saveProjects();
   renderProjectsAdmin();
-  showGalleryToast('🔄 Проекты по умолчанию восстановлены.');
+  showGalleryToast('🔄 Oletusprojektit palautettu.');
 }
 
 // ===== FILE UPLOAD =====
@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function processFileForPreview(file) {
-  if (!file.type.startsWith('image/')) { alert('Пожалуйста, выберите файл изображения.'); return; }
-  if (file.size > 5 * 1024 * 1024) { alert('Максимальный размер изображения — 5 МБ.'); return; }
-  if (pendingPhotos.length >= 5) { alert('Максимум 5 фотографий на один проект.'); return; }
+  if (!file.type.startsWith('image/')) { alert('Valitse kuvatiedosto.'); return; }
+  if (file.size > 5 * 1024 * 1024) { alert('Kuvan maksimikoko on 5 MB.'); return; }
+  if (pendingPhotos.length >= 5) { alert('Enintään 5 kuvaa per projekti.'); return; }
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -410,7 +410,7 @@ function renderRequests(requests) {
     return;
   }
 
-  const statusLabels = { processing: 'В обработке', in_progress: 'Выполняется', completed: 'Выполнено', declined: 'Отказ' };
+  const statusLabels = { processing: 'Käsittelyssä', in_progress: 'Käynnissä', completed: 'Valmis', declined: 'Hylätty' };
   const statusColors = { processing: 'new', in_progress: 'processing', completed: 'accepted', declined: 'declined' };
 
   container.innerHTML = requests.map(r => {
@@ -442,7 +442,7 @@ function openRequest(id) {
   document.getElementById('modalTitle').textContent = `Заявка ${r.id}`;
 
   const statusOptions = ['processing', 'in_progress', 'completed', 'declined'];
-  const statusLabels = { processing: 'В обработке', in_progress: 'Выполняется', completed: 'Выполнено', declined: 'Отказ' };
+  const statusLabels = { processing: 'Käsittelyssä', in_progress: 'Käynnissä', completed: 'Valmis', declined: 'Hylätty' };
 
   const date = new Date(r.createdAt);
   const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -508,9 +508,9 @@ function saveRequestChanges(id) {
 
 // ===== SIDEBAR NAV (with views) =====
 const viewTitles = {
-  requests: 'Заявки с сайта',
-  gallery: 'Галерея работ',
-  stats: 'Статистика'
+  requests: 'Tarjouspyynnöt',
+  gallery: 'Referenssigalleria',
+  stats: 'Tilastot'
 };
 
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
@@ -520,7 +520,7 @@ document.querySelectorAll('.sidebar-nav a').forEach(link => {
     link.classList.add('active');
     const view = link.dataset.view;
 
-    document.getElementById('pageTitle').textContent = viewTitles[view] || 'Заявки';
+    document.getElementById('pageTitle').textContent = viewTitles[view] || 'Tarjouspyynnöt';
 
     // Toggle view visibility
     document.getElementById('viewRequests').style.display = view === 'requests' ? '' : 'none';
