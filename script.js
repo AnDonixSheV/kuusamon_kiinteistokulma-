@@ -198,10 +198,11 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== FORM HANDLING =====
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
+  const submitBtn = form.querySelector('.form-submit');
   
   // Collect form data
   const data = new FormData(form);
@@ -225,6 +226,38 @@ function handleSubmit(e) {
   const existingRequests = JSON.parse(localStorage.getItem('kk_requests') || '[]');
   existingRequests.push(newRequest);
   localStorage.setItem('kk_requests', JSON.stringify(existingRequests));
+
+  // Send to email via FormSubmit AJAX
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Lähetetään...';
+  }
+  
+  try {
+    await fetch('https://formsubmit.co/ajax/jarkko.ronkainen@kuusamonkiinteistokulma.fi', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        Nimi: name,
+        Puhelinnumero: phone,
+        Sähköposti: email,
+        Palvelu: service,
+        Viesti: message,
+        _subject: 'Uusi tarjouspyyntö verkkosivuilta',
+        _captcha: 'false'
+      })
+    });
+  } catch (err) {
+    console.error('Error sending email:', err);
+  }
+  
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Lähetä tarjouspyyntö';
+  }
   
   // Show success message
   form.style.display = 'none';
