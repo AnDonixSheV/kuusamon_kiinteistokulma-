@@ -127,7 +127,7 @@ button, input, textarea, select { font-family: inherit; font-size: inherit; }
 .ext-services { padding: 96px 0; background: linear-gradient(160deg, #0a1614 0%, #122a20 50%, #1a3a2e 100%); }
 .ext-services .section-title { color: var(--color-white); }
 .ext-services .section-subtitle { color: rgba(255,255,255,0.6); }
-.ext-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.ext-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .ext-card { padding: 32px; border-radius: var(--radius-lg); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); transition: var(--transition); }
 .ext-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); border-color: rgba(45,122,74,0.4); }
 .ext-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
